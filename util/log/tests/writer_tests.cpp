@@ -10,7 +10,6 @@
 #include "../writer.hpp"
 #include <pthread.h>
 #include <unistd.h>
-#include <unicode/unistr.h>
 
 using namespace Util;
 #define LOG_NAME u8"LogTests"
