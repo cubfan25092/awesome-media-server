@@ -1,12 +1,5 @@
 #pragma once
-#ifdef _MSC_VER
-#if (_MSC_VER < 1700) 
-#error This requires Visual Studio 2012 or later
-#else
-//for some idiotic reason, MS hasnt introduced support for unicode string literals
-#define u8 
-#endif
-#endif
+
 
 
 #include <cstring>
@@ -97,7 +90,7 @@ namespace Util
 
 		public:
 
-		static Writer &get_instance();
+				static Writer &get_instance();
 
 				/* sets the log file to the file with name fname
 				 * any other log file will be closed

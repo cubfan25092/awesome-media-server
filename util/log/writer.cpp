@@ -1,12 +1,3 @@
-#ifdef _MSC_VER
-#if (_MSC_VER < 1700) 
-#error This requires Visual Studio 2012 or later
-#else
-//for some idiotic reason, MS hasnt introduced support for unicode string literals
-#define u8 
-#endif
-#endif
-
 #include "writer.hpp"
 
 using namespace Util::Log;
@@ -63,7 +54,7 @@ int Writer::set_log_file(const char *fname, bool erase_existing)
 void Writer::set_priority(Priority_set p)
 {
 	if(p > Priority::ALL){
-		writef(u8"LogWriter", Priority::WARN, u8"Invalid priority set: %u", p);
+		writef("LogWriter", Priority::WARN, "Invalid priority set: %u", p);
 	} else{
 		prio |= p;
 	}
@@ -72,7 +63,7 @@ void Writer::set_priority(Priority_set p)
 void Writer::clear_priority(Priority_set p)
 {
 	if(p > Priority::ALL){
-		writef(u8"LogWriter", Priority::WARN, u8"Invalid priority clear: %u", p);
+		writef("LogWriter", Priority::WARN, "Invalid priority clear: %u", p);
 	} else{
 		prio &= (~p);
 	}
@@ -101,7 +92,7 @@ void Writer::writef(const char *name, const Priority p, const char * fmt, ...)
 		size_t needed = vsnprintf(nullptr, 0, fmt, args);
 		char buffer[++needed];
 		if(!needed || vsnprintf(buffer, needed, fmt, rargs) < 0){
-			write_internal(u8"LogWriter", Util::Log::Priority::WARN, u8"Error writing formatted string to log.");
+			write_internal("LogWriter", Util::Log::Priority::WARN, "Error writing formatted string to log.");
 		} else{
 			write_internal(name, p, buffer);
 		}
@@ -125,24 +116,24 @@ void Writer::write_internal(const char *name, const Priority p, const char *str)
 			str = replace.c_str();
 		}
 		std::lock_guard<std::mutex> lock(write_lock);
-    	(*log_file) << u8"(" << boost::locale::as::date << now << u8"::" << boost::locale::as::time << now << u8")" 
-    		<< u8" [" << std::fixed << std::setprecision(6) << boost::locale::as::number << get_time() << std::resetiosflags(std::ios::fixed) 
-			<< std::setprecision(0) << u8"::" << name << u8"] ";
+    	(*log_file) << "(" << boost::locale::as::date << now << "::" << boost::locale::as::time << now << ")" 
+    		<< " [" << std::fixed << std::setprecision(6) << boost::locale::as::number << get_time() << std::resetiosflags(std::ios::fixed) 
+			<< std::setprecision(0) << "::" << name << "] ";
 		switch(p){
 			case Priority::ERROR:
-				(*log_file) <<  u8"(ERROR) " << str << std::endl;
+				(*log_file) <<  "(ERROR) " << str << std::endl;
 				break;
 			case Priority::WARN:
-				(*log_file) <<  u8"(WARN) " << str << std::endl;
+				(*log_file) <<  "(WARN) " << str << std::endl;
 				break;
 			case Priority::INFO:
-				(*log_file) <<  u8"(INFO) " << str << std::endl;
+				(*log_file) <<  "(INFO) " << str << std::endl;
 				break;
 			case Priority::DEBUG:
-				(*log_file) <<  u8"(DEBUG) " << str << std::endl;
+				(*log_file) <<  "(DEBUG) " << str << std::endl;
 				break;
 			default:
-				(*log_file) <<  u8"(ERROR) " << u8"Unknown priority" << p << std::endl;
+				(*log_file) <<  "(ERROR) " << u8"Unknown priority" << p << std::endl;
 				break;
 		}  
 	}
