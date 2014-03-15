@@ -91,7 +91,7 @@ void Writer::writef(const char *name, const Priority p, const char * fmt, ...)
 		va_copy(rargs, args);
 		size_t needed = vsnprintf(nullptr, 0, fmt, args);
 		char buffer[++needed];
-		if(!needed || vsnprintf(buffer, needed, fmt, rargs) < 0){
+		if(needed < 2 || vsnprintf(buffer, needed, fmt, rargs) < 0){
 			write_internal("LogWriter", Util::Log::Priority::WARN, "Error writing formatted string to log.");
 		} else{
 			write_internal(name, p, buffer);
